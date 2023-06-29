@@ -1,0 +1,190 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/index.xhtml" xmlns:hf="http://highfaces.org">
+
+	<ui:define name="PageContent">
+		<style type="text/css">
+.ui-growl {
+	position: absolute;
+	top: 10%;
+	left: 77%;
+	z-index: 9999;
+}
+html, body {
+	font-size: 80%;
+}
+</style>
+
+		<!-- inporting resource -->
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
+		<!-- optional -->
+		<script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
+		<script src="https://code.highcharts.com/modules/export-data.js"></script>
+		<!-- end of inporting resource -->
+
+
+		<script type="text/javascript">
+			function myconfig() {
+				this.chart.style = {
+					fontFamily : 'Times New Roman'
+				}, this.chart.plotBackgroundColor = {
+					linearGradient : [ 0, 0, 500, 500 ],
+					stops : [ [ 0, 'rgb(255, 255, 255)' ],
+							[ 1, 'rgb(200, 200, 255)' ] ]
+				}, this.tooltip = {
+					valueDecimals : 0
+
+				}, this.credits = {
+					enabled : false
+				}, this.lang = {
+					thousandsSep : '.'
+				}
+
+			}
+			$(function() {
+				Highcharts.setOptions({
+					lang : {
+						thousandsSep : '.'
+					}
+				});
+			});
+		</script>
+		<h:form id="form1">
+			<p:dialog header="Ajout" widgetVar="dlg7" id="panajoutParam">
+				<h:panelGrid columns="2">
+					<p:outputLabel for="@next" value="Function" />
+					<p:inputText value="#{alerteBean.param.fonction}">
+						<p:ajax event="keyup"></p:ajax>
+					</p:inputText>
+					<p:outputLabel for="@next" value="Seuil" />
+					<p:inputText value="#{alerteBean.param.seuil}">
+						<p:ajax event="keyup"></p:ajax>
+					</p:inputText>
+					<p:outputLabel for="@next" value="Parametre">
+					</p:outputLabel>
+					<p:selectOneMenu value="#{alerteBean.param.idParametre}"
+						effect="fold">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{alerteBean.flows}" var="flow"
+							itemLabel="#{flow.flowName}" itemValue="#{flow.id}" />
+						<p:ajax event="change" listener="#{alerteBean.showdata2}"></p:ajax>
+					</p:selectOneMenu>
+					<p:outputLabel for="@next" value="Rule" />
+					<p:selectOneMenu value="#{alerteBean.param.idRule}" effect="fold">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{alerteBean.rarules}" var="rule"
+							itemLabel="#{rule.nom}" itemValue="#{rule.id}" />
+						<p:ajax event="change" listener="#{alerteBean.showdata}"></p:ajax>
+					</p:selectOneMenu>
+
+					<p:commandButton value="Valider" styleClass="btn btn-primary"
+						ajax="true" process="@this"
+						update=":form1:singleDT4,:form1:panajoutParam,:form1"
+						action="#{alerteBean.ajouterParam()}"
+						oncomplete="PF('dlg7').hide()" />
+
+					<p:commandButton value="Annuler" styleClass="btn btn-danger"
+						onclick="PF('dlg7').hide()" />
+				</h:panelGrid>
+
+
+			</p:dialog>
+			<p:dialog header="Modifier" widgetVar="dlg8" id="panModifParam">
+				<p:outputPanel id="modifPos4" style="text-align:center;">
+
+					<h:panelGrid columns="2">
+						<p:outputLabel for="@next" value="Function" />
+						<p:inputText value="#{alerteBean.param1.fonction}" />
+						<p:outputLabel value="Seuil" />
+						<p:inputText value="#{alerteBean.param1.seuil}" />
+						<p:outputLabel value="Parametre" />
+						<p:selectOneMenu id="param2"
+							value="#{alerteBean.param1.idParametre}" effect="fold">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems value="#{alerteBean.flows}" var="flow"
+								itemLabel="#{flow.flowName}" itemValue="#{flow.id}" />
+						</p:selectOneMenu>
+						<p:outputLabel value="Rule" />
+						<p:selectOneMenu value="#{alerteBean.param1.idRule}" effect="fold">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems value="#{alerteBean.rarules}" var="rule"
+								itemLabel="#{rule.nom}" itemValue="#{rule.id}" />
+						</p:selectOneMenu>
+						<p:commandButton value="Valider" styleClass="btn btn-primary"
+							update=":form1:panajoutParam"
+							actionListener="#{alerteBean.modifierParam()}"
+							oncomplete="PF('dlg8').hide()" />
+						<p:commandButton value="Annuler" styleClass="btn btn-danger"
+							onclick="PF('dlg8').hide()" />
+					</h:panelGrid>
+
+				</p:outputPanel>
+			</p:dialog>
+			<p:dataTable styleClass="myTable" id="singleDT4"
+				value="#{alerteBean.params}" var="p">
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Fonction" />
+					</f:facet>
+					<h:outputText id="ID" value="#{p.fonction}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Fonction" />
+					</f:facet>
+					<h:outputText id="ID" value="#{p.fonction}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Seuil" />
+					</f:facet>
+					<h:outputText id="Seuil" value="#{p.seuil}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Id Parametre" />
+					</f:facet>
+					<h:outputText id="Idparam" value="#{p.idParametre}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Id rule" />
+					</f:facet>
+					<h:outputText id="IdRule" value="#{p.idRule}" />
+				</p:column>
+
+
+				<p:column style="width:100px;text-align: center">
+					<p:commandButton process="@this" icon="ui-icon-arrowrefresh-1-w"
+						style="color:#fff; background: rgb(28, 184, 65) ; border-color: #d73925 ;"
+						title="Modifier" update=":form1:modifPos4" value="update"
+						styleClass="btn btn-success" oncomplete="PF('dlg8').show();">
+						<f:setPropertyActionListener value="#{p}"
+							target="#{alerteBean.param1}" />
+					</p:commandButton>
+				</p:column>
+				<p:column style="width:100px;text-align: center">
+					<p:commandButton process="@this" update="singleDT4"
+						icon="ui-icon-trash" title="Supprimer" value="delete"
+						styleClass="btn btn-danger" action="#{alerteBean.deleteParam()}">
+						<f:setPropertyActionListener value="#{p}"
+							target="#{alerteBean.param1}" />
+					</p:commandButton>
+				</p:column>
+
+				<f:facet name="footer">
+
+
+					<p:commandButton process="singleDT4" icon="ui-icon-plusthick"
+						styleClass="btn btn-primary" value="Ajouter"
+						oncomplete="PF('dlg7').show()" />
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>

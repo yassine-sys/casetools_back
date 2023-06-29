@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/index.xhtml" xmlns:hf="http://highfaces.org">
+
+	<ui:define name="PageContent">
+		<style type="text/css">
+.ui-growl {
+	position: absolute;
+	top: 10%;
+	left: 77%;
+	z-index: 9999;
+}
+html, body {
+	font-size: 80%;
+}
+</style>
+
+		<!-- inporting resource -->
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
+		<!-- optional -->
+		<script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
+		<script src="https://code.highcharts.com/modules/export-data.js"></script>
+		<!-- end of inporting resource -->
+
+
+		<script type="text/javascript">
+			function myconfig() {
+				this.chart.style = {
+					fontFamily : 'Times New Roman'
+				}, this.chart.plotBackgroundColor = {
+					linearGradient : [ 0, 0, 500, 500 ],
+					stops : [ [ 0, 'rgb(255, 255, 255)' ],
+							[ 1, 'rgb(200, 200, 255)' ] ]
+				}, this.tooltip = {
+					valueDecimals : 0
+
+				}, this.credits = {
+					enabled : false
+				}, this.lang = {
+					thousandsSep : '.'
+				}
+
+			}
+			$(function() {
+				Highcharts.setOptions({
+					lang : {
+						thousandsSep : '.'
+					}
+				});
+			});
+		</script>
+		<h:form id="form1">
+		<p:panel>
+		<p:dataTable  styleClass="myTable"  id="singleDT" value="#{alerteBean.revenueList}"
+				var="rev">
+				<f:facet name="header">
+					<p:outputLabel value="Revenue Stream"></p:outputLabel>
+				</f:facet>
+
+				<p:column headerText="Revenue Stream">
+					<h:outputText value="#{rev.revenuestream}" />
+				</p:column>
+		<p:column style="width:100px;text-align: center">
+					<p:commandButton process="singleDT" icon="ui-icon-arrowrefresh-1-w"
+						style="color:#fff; background: rgb(28, 184, 65) ; border-color: #d73925 ;"
+						title="Modifier" update=":form1:modifPos" value="update"
+						styleClass="btn btn-success" oncomplete="PF('dlg4').show();">
+						<f:setPropertyActionListener value="#{rev}"
+							target="#{alerteBean.rev1}" />
+					</p:commandButton>
+				</p:column>
+				<p:column style="width:100px;text-align: center">
+					<p:commandButton process="singleDT" update="singleDT"
+						icon="ui-icon-trash" title="Supprimer" value="delete"
+						styleClass="btn btn-danger" action="#{alerteBean.delete()}">
+						<f:setPropertyActionListener value="#{rev}"
+							target="#{alerteBean.rev1}" />
+					</p:commandButton>
+				</p:column>
+				<f:facet name="footer">
+
+
+					<p:commandButton process="singleDT" icon="ui-icon-plusthick"
+						styleClass="btn btn-primary" value="Ajouter"
+						oncomplete="PF('dlg3').show()" />
+
+
+				</f:facet>
+
+			</p:dataTable>
+		</p:panel>
+		<p:dialog  header="Ajout" widgetVar="dlg3" id="panajoutRev">
+				<h:panelGrid columns="2">
+					<p:outputLabel value="Revenue stream" />
+					<p:inputText value="#{alerteBean.rev.revenuestream}" />
+					
+	  <p:commandButton value="Valider" styleClass="btn btn-primary"
+						update="singleDT,:form1:panajoutRev"
+						actionListener="#{alerteBean.ajouter}"
+						oncomplete="PF('dlg3').hide()" />
+					<p:commandButton value="Annuler" styleClass="btn btn-danger" onclick="PF('dlg3').hide()" />
+				</h:panelGrid>
+
+
+			</p:dialog>
+			<p:dialog  header="Modifier" widgetVar="dlg4" id="panModifRev">
+							<p:outputPanel id="modifPos" style="text-align:center;">
+			
+				<h:panelGrid columns="2">
+					<p:outputLabel value="Revenue stream" />
+					<p:inputText value="#{alerteBean.rev1.revenuestream}" />
+					
+	  <p:commandButton value="Valider" styleClass="btn btn-primary"
+						update="singleDT,:form1:panajoutRev"
+						actionListener="#{alerteBean.modifier}"
+						oncomplete="PF('dlg4').hide()" />
+					<p:commandButton value="Annuler" styleClass="btn btn-danger" onclick="PF('dlg3').hide()" />
+				</h:panelGrid>
+
+            </p:outputPanel>
+		
+		
+			
+
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

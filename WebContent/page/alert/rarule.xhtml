@@ -1,0 +1,432 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions" template="/index.xhtml"
+	xmlns:hf="http://highfaces.org">
+
+	<ui:define name="PageContent">
+		<style type="text/css">
+.ui-growl {
+	position: absolute;
+	top: 10%;
+	left: 77%;
+	z-index: 9999;
+}
+html, body {
+	font-size: 80%;
+}
+</style>
+
+		<!-- inporting resource -->
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
+		<!-- optional -->
+		<script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
+		<script src="https://code.highcharts.com/modules/export-data.js"></script>
+		<!-- end of inporting resource -->
+
+
+		<script type="text/javascript">
+			function myconfig() {
+				this.chart.style = {
+					fontFamily : 'Times New Roman'
+				}, this.chart.plotBackgroundColor = {
+					linearGradient : [ 0, 0, 500, 500 ],
+					stops : [ [ 0, 'rgb(255, 255, 255)' ],
+							[ 1, 'rgb(200, 200, 255)' ] ]
+				}, this.tooltip = {
+					valueDecimals : 0
+
+				}, this.credits = {
+					enabled : false
+				}, this.lang = {
+					thousandsSep : '.'
+				}
+
+			}
+			$(function() {
+				Highcharts.setOptions({
+					lang : {
+						thousandsSep : '.'
+					}
+				});
+			});
+		</script>
+		<h:form id="form1">
+			<div
+				class="preloader flex-column justify-content-center align-items-center">
+				<img class="animation__shake" src="elite.png" alt="elite"
+					height="200" width="200"></img>
+			</div>
+			<p:panel id="pan2table">
+				<p:panelGrid columns="2">
+					<p:dataTable id="singleDT3" tableStyle="width:auto ; "
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" paginator="true"
+						value="#{alerteBean.rarules}" var="rule">
+						<f:facet name="header">
+							<p:outputLabel value="RARULES"></p:outputLabel>
+						</f:facet>
+
+						<p:column headerText="Description">
+							<h:outputText value="#{rule.description}" />
+						</p:column>
+						<p:column headerText="Nom">
+							<h:outputText value="#{rule.nom}" />
+						</p:column>
+						<p:column headerText="Utilisateur">
+							<h:outputText value="#{rule.nomUtilisateur}" />
+						</p:column>
+						<p:column headerText="Type">
+							<h:outputText value="#{rule.type}" />
+						</p:column>
+						<p:column headerText="idDomain">
+							<h:outputText value="#{rule.idDomain}" />
+							<p:column headerText="idRevenue">
+								<h:outputText value="#{rule.idrevenue}" />
+							</p:column>
+						</p:column>
+						<p:column style="width:100px;text-align: center">
+							<p:commandButton process="singleDT3" title="Modifier"
+								update=":form1:modifPos3" value="update"
+								styleClass="rounded-button ui-button-success"
+								oncomplete="PF('dlg5').show();">
+								<f:setPropertyActionListener value="#{rule}"
+									target="#{alerteBean.rule1}" />
+							</p:commandButton>
+						</p:column>
+						<p:column style="width:100px;text-align: center">
+							<p:commandButton process="singleDT3" update="singleDT3"
+								icon="ui-icon-trash" title="Supprimer" value="delete"
+								styleClass="rounded-button ui-button-danger"
+								action="#{alerteBean.deleteRarule()}">
+								<f:setPropertyActionListener value="#{rule}"
+									target="#{alerteBean.rule1}" />
+							</p:commandButton>
+						</p:column>
+						<f:facet name="footer">
+							<p:commandButton process="singleDT3" icon="ui-icon-plusthick"
+								styleClass="rounded-button" value="Add Rule"
+								oncomplete="PF('dlg6').show()" />
+						</f:facet>
+
+					</p:dataTable>
+					<p:dataTable styleClass="myTable" id="singleDT4"
+						tableStyle="width:auto ; "
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" paginator="true"
+						value="#{alerteBean.params}" var="p">
+						<f:facet name="header">
+							<p:outputLabel value=" Parametre Rarule"></p:outputLabel>
+						</f:facet>
+
+						<p:column headerText="Fonctionl">
+							<h:outputText value="#{p.fonction}" />
+						</p:column>
+						<p:column headerText="Seuil">
+							<h:outputText value="#{p.seuil}" />
+						</p:column>
+						<p:column headerText=" Parametre">
+							<h:outputText value="#{p.nameparametre}" />
+						</p:column>
+						<p:column headerText="Id rule">
+							<h:outputText value="#{p.idRule}" />
+						</p:column>
+						<p:column style="width:100px;text-align: center">
+							<p:commandButton process="@this" icon="ui-icon-arrowrefresh-1-w"
+								title="Modifier" update=":form1:modifPos4" value="update"
+								styleClass="rounded-button ui-button-success"
+								oncomplete="PF('dlg8').show();">
+								<f:setPropertyActionListener value="#{p}"
+									target="#{alerteBean.param1}" />
+							</p:commandButton>
+						</p:column>
+						<p:column style="width:100px;text-align: center">
+							<p:commandButton process="@this" update="singleDT4"
+								icon="ui-icon-trash" title="Supprimer" value="delete"
+								styleClass="rounded-button ui-button-danger"
+								action="#{alerteBean.deleteParam()}">
+								<f:setPropertyActionListener value="#{p}"
+									target="#{alerteBean.param1}" />
+							</p:commandButton>
+						</p:column>
+						<f:facet name="footer">
+
+							<p:commandButton process="singleDT4" icon="ui-icon-plusthick"
+								styleClass="rounded-button" value="Ajouter"
+								oncomplete="PF('dlg7').show()" />
+						</f:facet>
+					</p:dataTable>
+				</p:panelGrid>
+			</p:panel>
+			<p:panelGrid columns="1">
+				<p:panel>
+					<p:dataTable styleClass="myTable" id="singleDT5"
+						value="#{alerteBean.reports}" var="rep">
+						<f:facet name="header">
+							<p:outputLabel value="Rapport Rarules"></p:outputLabel>
+						</f:facet>
+
+						<p:column headerText=" Repport">
+							<h:outputText value="#{rep.namerep}" />
+						</p:column>
+						<p:column headerText=" Rule">
+							<h:outputText value="#{rep.namerul}" />
+						</p:column>
+						<p:column style="width:100px;text-align: center">
+							<p:commandButton process="singleDT5"
+								icon="ui-icon-arrowrefresh-1-w"
+								style="color:#fff; background: rgb(28, 184, 65) ; border-color: #d73925 ;"
+								title="Modifier" update=":form1:modifPos5" value="update"
+								styleClass="btn btn-success" oncomplete="PF('dlg10').show();">
+								<f:setPropertyActionListener value="#{rep}"
+									target="#{alerteBean.rep1}" />
+							</p:commandButton>
+						</p:column>
+						<p:column style="width:100px;text-align: center">
+							<p:commandButton process="singleDT5" update="singleDT5"
+								icon="ui-icon-trash" title="Supprimer" value="delete"
+								styleClass="btn btn-danger" action="#{alerteBean.deleteRep()}">
+								<f:setPropertyActionListener value="#{rep}"
+									target="#{alerteBean.rep1}" />
+							</p:commandButton>
+						</p:column>
+						<f:facet name="footer">
+
+
+							<p:commandButton process="singleDT5" styleClass="rounded-button"
+								value="Ajouter" oncomplete="PF('dlg9').show()" />
+						</f:facet>
+					</p:dataTable>
+				</p:panel>
+			</p:panelGrid>
+
+
+			<p:dialog header="Ajout" widgetVar="dlg6" id="panajoutRule">
+				<h:panelGrid columns="2">
+					<p:outputLabel value="Description" />
+					<p:inputText value="#{alerteBean.rule.description}" />
+					<p:outputLabel value="Nom" />
+					<p:inputText value="#{alerteBean.rule.nom}" />
+					<p:outputLabel value="Type" />
+					<p:inputText value="#{alerteBean.rule.type}" />
+					<p:outputLabel value="IdDomainx" />
+
+					<p:selectOneMenu value="#{alerteBean.rule.idDomain}" effect="fold">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{alerteBean.domainList}" var="dom"
+							itemLabel="#{dom.domain}" itemValue="#{dom.id}" />
+					</p:selectOneMenu>
+					<p:outputLabel value="IdRevenue" />
+					<p:selectOneMenu id="reve" value="#{alerteBean.rule.idrevenue}"
+						effect="fold">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{alerteBean.revenueList}" var="rev"
+							itemLabel="#{rev.revenuestream}" itemValue="#{rev.id}" />
+					</p:selectOneMenu>
+					<p:commandButton value="Valider" styleClass="rounded-button"
+						update="singleDT3,:form1:pan2table"
+						actionListener="#{alerteBean.ajouterRarule()}"
+						oncomplete="PF('dlg6').hide()" />
+					<p:commandButton value="Annuler"
+						styleClass="rounded-button ui-button-danger"
+						onclick="PF('dlg6').hide()" />
+				</h:panelGrid>
+
+
+			</p:dialog>
+			<p:dialog header="Modifier" widgetVar="dlg5" id="panModifRule">
+				<p:outputPanel id="modifPos3" style="text-align:center;">
+
+					<h:panelGrid columns="2">
+						<p:outputLabel value="Description" />
+						<p:inputText value="#{alerteBean.rule1.description}" />
+						<p:outputLabel value="Nom" />
+						<p:inputText value="#{alerteBean.rule1.nom}" />
+						<p:outputLabel value="Type" />
+						<p:inputText value="#{alerteBean.rule1.type}" />
+						<p:outputLabel value="IdDomain" />
+						<p:selectOneMenu id="flow2" value="#{alerteBean.rule1.idDomain}"
+							effect="fold">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems value="#{alerteBean.domainList}" var="dom"
+								itemLabel="#{dom.domain}" itemValue="#{dom.id}" />
+						</p:selectOneMenu>
+						<p:outputLabel value="IdRevenue" />
+						<p:selectOneMenu id="reve2" value="#{alerteBean.rule1.idrevenue}"
+							effect="fold">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems value="#{alerteBean.revenueList}" var="rev"
+								itemLabel="#{rev.revenuestream}" itemValue="#{rev.id}" />
+						</p:selectOneMenu>
+						<p:commandButton value="Valider" styleClass="rounded-button"
+							update="singleDT3,:form1:panajoutRule"
+							actionListener="#{alerteBean.modifierRarule()}"
+							oncomplete="PF('dlg5').hide()" />
+						<p:commandButton value="Annuler"
+							styleClass="rounded-button ui-button-danger"
+							onclick="PF('dlg5').hide()" />
+					</h:panelGrid>
+
+				</p:outputPanel>
+			</p:dialog>
+			<p:dialog header="Ajout" widgetVar="dlg7" id="panajoutParam">
+				<h:panelGrid columns="2">
+					<p:outputLabel for="@next" value="Function" />
+					<p:selectOneMenu id="option1" value="#{alerteBean.param.fonction}">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItem itemLabel="Supérieur à"
+							itemValue="#{alerteBean.sup}" />
+						<f:selectItem itemLabel="Inferieur à"
+							itemValue="#{alerteBean.inf}" />
+						<f:selectItem itemLabel="Egal à" itemValue="#{alerteBean.egal}" />
+						<p:ajax event="change" />
+						<f:facet name="footer">
+							<h:outputText value="3 options" style="font-weight:bold;" />
+						</f:facet>
+					</p:selectOneMenu>
+
+					<p:outputLabel for="@next" value="Seuil" />
+					<p:spinner id="ajaxSpinner1" value="#{alerteBean.param.seuil}"
+						min="0" stepFactor="0.5">
+						<p:ajax process="@this" />
+					</p:spinner>
+
+					<p:outputLabel for="@next" value="Parametre">
+					</p:outputLabel>
+					<p:selectOneMenu value="#{alerteBean.param.idParametre}"
+						effect="fold">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{alerteBean.flows}" var="flow"
+							itemLabel="#{flow.flowName}" itemValue="#{flow.id}" />
+						<p:ajax event="change" listener="#{alerteBean.showdata2}"></p:ajax>
+					</p:selectOneMenu>
+					<p:outputLabel for="@next" value="Rule" />
+					<p:selectOneMenu value="#{alerteBean.param.idRule}" effect="fold">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{alerteBean.rarules}" var="rule"
+							itemLabel="#{rule.nom}" itemValue="#{rule.id}" />
+						<p:ajax event="change" listener="#{alerteBean.showdata}"></p:ajax>
+					</p:selectOneMenu>
+
+					<p:commandButton value="Valider" styleClass="rounded-button"
+						ajax="true" process="@this"
+						update=":form1:singleDT4,:form1:panajoutParam,:form1:pan2table"
+						action="#{alerteBean.ajouterParam()}"
+						oncomplete="PF('dlg7').hide()" />
+
+					<p:commandButton value="Annuler"
+						styleClass="rounded-button ui-button-danger"
+						onclick="PF('dlg7').hide()" />
+				</h:panelGrid>
+
+
+			</p:dialog>
+			<p:dialog header="Modifier" widgetVar="dlg8" id="panModifParam">
+				<p:outputPanel id="modifPos4" style="text-align:center;">
+
+					<h:panelGrid columns="2">
+						<p:outputLabel for="@next" value="Function" />
+						<p:selectOneMenu id="option2"
+							value="#{alerteBean.param1.fonction}">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="Supérieur à"
+								itemValue="#{alerteBean.sup}" />
+							<f:selectItem itemLabel="Inferieur à"
+								itemValue="#{alerteBean.inf}" />
+							<f:selectItem itemLabel="Egal à" itemValue="#{alerteBean.egal}" />
+							<p:ajax event="change" />
+							<f:facet name="footer">
+								<h:outputText value="3 options" style="font-weight:bold;" />
+							</f:facet>
+						</p:selectOneMenu>
+						<p:outputLabel for="@next" value="Seuil" />
+						<p:spinner id="ajaxSpinner" value="#{alerteBean.param1.seuil}"
+							min="0" stepFactor="0.5">
+							<p:ajax process="@this" />
+						</p:spinner>
+
+						<p:outputLabel value="Parametre" />
+						<p:selectOneMenu id="param2"
+							value="#{alerteBean.param1.idParametre}" effect="fold">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems value="#{alerteBean.flows}" var="flow"
+								itemLabel="#{flow.flowName}" itemValue="#{flow.id}" />
+						</p:selectOneMenu>
+						<p:outputLabel value="Rule" />
+						<p:selectOneMenu value="#{alerteBean.param1.idRule}" effect="fold">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems value="#{alerteBean.rarules}" var="rule"
+								itemLabel="#{rule.nom}" itemValue="#{rule.id}" />
+						</p:selectOneMenu>
+						<p:commandButton value="Valider" styleClass="rounded-button"
+							update="singleDT4,:form1:panajoutParam,:form1"
+							actionListener="#{alerteBean.modifierParam()}"
+							oncomplete="PF('dlg8').hide()" />
+						<p:commandButton value="Annuler"
+							styleClass="rounded-button ui-button-danger"
+							onclick="PF('dlg8').hide()" />
+					</h:panelGrid>
+
+				</p:outputPanel>
+			</p:dialog>
+			<p:dialog header="Ajout" widgetVar="dlg9" id="panajoutRep">
+				<h:panelGrid columns="2">
+					<p:outputLabel for="@next" value="Rapport" />
+					<p:selectOneMenu id="rap" value="#{alerteBean.rep.idReport}"
+						effect="fold">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{alerteBean.repRaports}" var="rep"
+							itemLabel="#{rep.name}" itemValue="#{rep.id}" />
+					</p:selectOneMenu>
+					<p:outputLabel for="@next" value="Rule" />
+					<p:selectOneMenu id="rule" value="#{alerteBean.rep.idRule}"
+						effect="fold">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{alerteBean.rarules}" var="rul"
+							itemLabel="#{rul.nom}" itemValue="#{rul.id}" />
+					</p:selectOneMenu>
+					<p:commandButton value="Valider" styleClass="rounded-button"
+						update="singleDT5,:form1:panajoutRep"
+						actionListener="#{alerteBean.ajouterReport()}"
+						oncomplete="PF('dlg9').hide()" />
+					<p:commandButton value="Annuler"
+						styleClass="rounded-button ui-button-danger"
+						onclick="PF('dlg9').hide()" />
+				</h:panelGrid>
+			</p:dialog>
+			<p:dialog header="Modifier" widgetVar="dlg10" id="panModifRep">
+				<p:outputPanel id="modifPos5" style="text-align:center;">
+
+					<h:panelGrid columns="2">
+						<p:outputLabel for="@next" value="Rapport" />
+						<p:selectOneMenu id="rap2" value="#{alerteBean.rep1.idReport}"
+							effect="fold">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems value="#{alerteBean.repRaports}" var="rep"
+								itemLabel="#{rep.name}" itemValue="#{rep.id}" />
+						</p:selectOneMenu>
+						<p:outputLabel for="@next" value="Rule" />
+						<p:selectOneMenu id="rule2" value="#{alerteBean.rep1.idRule}"
+							effect="fold">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems value="#{alerteBean.rarules}" var="rul"
+								itemLabel="#{rul.nom}" itemValue="#{rul.id}" />
+						</p:selectOneMenu>
+
+						<p:commandButton value="Valider" styleClass="rounded-button"
+							update="singleDT5,:form1:panajoutRep"
+							actionListener="#{alerteBean.modifierRep()}"
+							oncomplete="PF('dlg10').hide()" />
+						<p:commandButton value="Annuler"
+							styleClass="rounded-button ui-button-danger"
+							onclick="PF('dlg10').hide()" />
+					</h:panelGrid>
+
+				</p:outputPanel>
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

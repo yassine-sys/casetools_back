@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions" template="/index.xhtml"
+	xmlns:hf="http://highfaces.org">
+
+	<ui:define name="PageContent">
+		<style type="text/css">
+.ui-growl {
+	position: absolute;
+	top: 10%;
+	left: 77%;
+	z-index: 9999;
+}
+
+html, body {
+	font-size: 80%;
+}
+</style>
+
+		<!-- inporting resource -->
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
+		<!-- optional -->
+		<script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
+		<script src="https://code.highcharts.com/modules/export-data.js"></script>
+		<!-- end of inporting resource -->
+
+
+		<script type="text/javascript">
+			function myconfig() {
+				this.chart.style = {
+					fontFamily : 'Times New Roman'
+				}, this.chart.plotBackgroundColor = {
+					linearGradient : [ 0, 0, 500, 500 ],
+					stops : [ [ 0, 'rgb(255, 255, 255)' ],
+							[ 1, 'rgb(200, 200, 255)' ] ]
+				}, this.tooltip = {
+					valueDecimals : 0
+
+				}, this.credits = {
+					enabled : false
+				}, this.lang = {
+					thousandsSep : '.'
+				}
+
+			}
+			$(function() {
+				Highcharts.setOptions({
+					lang : {
+						thousandsSep : '.'
+					}
+				});
+			});
+		</script>
+		<h:form id="form1">
+			<p:panel>
+				<p:dataTable styleClass="myTable" id="singleDT6"
+					value="#{alerteBean.alertes}" rows="5" paginator="true"
+					paginatorPosition="both" selectionMode="single"
+					rowKey="#{alert.id}" selection="#{alerteBean.alertselected}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+					rowsPerPageTemplate="5,10,{ShowAll|'All'}" var="alert">
+
+					<p:ajax event="rowSelect" listener="#{alerteBean.showmsgalert()}"></p:ajax>
+
+					<f:facet name="header">
+						<p:outputLabel value="AlerteRA"></p:outputLabel>
+					</f:facet>
+
+					<p:column headerText="date Detection">
+						<h:outputText value="#{alert.dateDetection}" />
+					</p:column>
+					<p:column headerText="date Appel">
+						<h:outputText value="#{alert.dateappel}" />
+					</p:column>
+					<p:column headerText="Etat">
+						<h:outputText value="#{alert.etat}" />
+					</p:column>
+					<p:column headerText="rule">
+						<h:outputText value="#{alert.idRule}" />
+					</p:column>
+					<p:column headerText="Description Rule">
+						<h:outputText value="#{alert.desc}" />
+					</p:column>
+					<p:column headerText="seuil">
+						<h:outputText value="#{alert.seuil}" />
+					</p:column>
+					<p:column headerText="Function">
+						<h:outputText value="#{alert.function}" />
+					</p:column>
+					<p:column headerText="valeur">
+						<h:outputText value="#{alert.valeur}" />
+					</p:column>
+
+					<f:facet name="footer">
+						<c:if test="#{loginbean.user.assignedTo}">
+							<p:commandButton value="Assigned To user"
+								styleClass="rounded-button ui-button-raised ui-button-info"
+								action="#{alerteBean.assigned()}"></p:commandButton>
+						</c:if>
+						<c:if test="#{loginbean.user.closed}">
+							<p:commandButton value="Close"
+								styleClass="rounded-button ui-button-raised ui-button-info"
+								action="#{alerteBean.close()}"></p:commandButton>
+						</c:if>
+						<c:if test="#{loginbean.user.closed}">
+							<p:commandButton value="Assigned To Me"
+								styleClass="rounded-button ui-button-raised ui-button-info"
+								action="#{alerteBean.close()}"></p:commandButton>
+						</c:if>
+
+					</f:facet>
+
+				</p:dataTable>
+			</p:panel>
+			<p:panel>
+				<p:dataTable styleClass="myTable" id="singleDT7"
+					value="#{alerteBean.histList}" var="hist">
+					<f:facet name="header">
+						<p:outputLabel value="Historique Alertes"></p:outputLabel>
+					</f:facet>
+
+					<p:column headerText="Date">
+						<h:outputText value="#{hist.dateStatut}" />
+					</p:column>
+					<p:column headerText="Etat">
+						<h:outputText value="#{hist.etat}" />
+					</p:column>
+					<p:column headerText="Utulisateur">
+						<h:outputText value="#{hist.nomUtilisateur}" />
+					</p:column>
+
+					<f:facet name="footer">
+
+
+
+					</f:facet>
+
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

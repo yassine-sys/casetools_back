@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1"
+	xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="CaseTools">
+		<jta-data-source>java:/administrationDS</jta-data-source>
+		<class>com.alert.entities.AbstractEntity</class>
+		<class>com.alert.entities.AlerteRa</class>
+		<class>com.alert.entities.DomainControl</class>
+		<class>com.alert.entities.EtlTypeFlow</class>
+		<class>com.alert.entities.Flow</class>
+		<class>com.alert.entities.Function</class>
+		<class>com.alert.entities.HistoriqueAlerte</class>
+		<class>com.alert.entities.ParametresRarule</class>
+		<class>com.alert.entities.Rarule</class>
+		<class>com.alert.entities.RepRapport</class>
+		<class>com.alert.entities.ReportRarule</class>
+		<class>com.alert.entities.RevenueStream</class>
+		<class>com.alert.entities.UserLogin</class>
+
+		<properties>
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+		</properties>
+	</persistence-unit>
+</persistence>

@@ -1,0 +1,117 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions" template="/index.xhtml"
+	xmlns:hf="http://highfaces.org">
+
+	<ui:define name="PageContent">
+		<style type="text/css">
+.ui-growl {
+	position: absolute;
+	top: 10%;
+	left: 77%;
+	z-index: 9999;
+}
+html, body {
+	font-size: 80%;
+}
+</style>
+
+		<h:form id="form1">
+			<p:growl id="growl" showDetail="true" sticky="true">
+
+			</p:growl>
+
+			<p:panel>
+				<p:dataTable id="singleDT2" multiViewState="true" rows="10"
+					paginator="true" tableStyle="width:auto ; "
+					widgetVar="customersTable"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15" rowKey="#{dom.id}"
+					value="#{alerteBean.domainList}" var="dom">
+					<f:facet name="header">
+						<p:outputLabel value="Domain Control"></p:outputLabel>
+					</f:facet>
+					<f:facet name="header">
+						<p:outputPanel>
+							<h:outputText value="Search all fields:" />
+							<p:inputText id="globalFilter" onkeyup="PF('singleDT2').filter()"
+								style="width:150px" placeholder="Enter keyword" />
+						</p:outputPanel>
+					</f:facet>
+					<p:column headerText="Domain Control">
+						<h:outputText value="#{dom.domain}" />
+					</p:column>
+					<p:column style="width:100px;text-align: center">
+						<p:commandButton process="singleDT2"
+							styleClass="rounded-button ui-button-success" title="Modifier"
+							update=":form1:modifPos1" value="update"
+							oncomplete="PF('dlg2').show();">
+							<f:setPropertyActionListener value="#{dom}"
+								target="#{alerteBean.dom1}" />
+						</p:commandButton>
+					</p:column>
+					<p:column style="width:100px;text-align: center">
+						<p:commandButton process="singleDT2" update="singleDT2"
+							styleClass="rounded-button ui-button-danger" title="Supprimer"
+							value="delete" action="#{alerteBean.deleteDom()}">
+							<f:setPropertyActionListener value="#{dom}"
+								target="#{alerteBean.dom1}" />
+						</p:commandButton>
+					</p:column>
+					<f:facet name="footer">
+
+
+						<p:commandButton process="singleDT2" value="Ajouter"
+							styleClass="rounded-button" oncomplete="PF('dlg1').show()" />
+
+
+					</f:facet>
+
+				</p:dataTable>
+			</p:panel>
+
+
+			<p:dialog header="Ajout" widgetVar="dlg1" id="panajoutDom">
+				<h:panelGrid columns="2">
+					<p:outputLabel value="Domain Control" />
+					<p:inputText value="#{alerteBean.dom.domain}" />
+
+					<p:commandButton value="Valider" styleClass="rounded-button"
+						update="singleDT2,:form1:panajoutDom"
+						actionListener="#{alerteBean.ajouterDom()}"
+						oncomplete="PF('dlg1').hide()" />
+					<p:commandButton value="Annuler" onclick="PF('dlg1').hide()"
+						styleClass="rounded-button ui-button-danger" />
+				</h:panelGrid>
+
+
+			</p:dialog>
+			<p:dialog header="Modifier" widgetVar="dlg2" id="panModifDom">
+				<p:outputPanel id="modifPos1" style="text-align:center;">
+
+					<h:panelGrid columns="2">
+						<p:outputLabel value="Domain Control" />
+						<p:inputText value="#{alerteBean.dom1.domain}" />
+
+					</h:panelGrid>
+
+					<h:panelGrid columns="2">
+						<p:commandButton value="Valider" styleClass="rounded-button"
+							update="singleDT2,:form1:panajoutDom"
+							actionListener="#{alerteBean.modifierDom()}"
+							oncomplete="PF('dlg2').hide()" />
+						<p:commandButton value="Annuler"
+							styleClass="rounded-button ui-button-danger"
+							onclick="PF('dlg2').hide()" />
+					</h:panelGrid>
+				</p:outputPanel>
+			</p:dialog>
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>

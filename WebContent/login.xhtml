@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+	<style type="text/css">
+body {
+	background-image: url("img.jpg");
+	background-color: #cccccc;
+}
+
+.ui-growl {
+	position: absolute;
+	top: 10%;
+	left: 77%;
+	z-index: 9999;
+}
+</style>
+	<meta charset="utf-8"></meta>
+	<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+	<title>CaseTools | Log in</title>
+
+	<!-- Google Font: Source Sans Pro -->
+	<h:outputScript library="primefaces" name="jquery/jquery.js"
+		target="head" />
+	<h:outputScript library="primefaces" name="jquery/jquery-plugins.js"
+		target="head" />
+	<link rel="stylesheet"
+		href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"></link>
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet"
+		href="#{request.contextPath}/plugins/fontawesome-free/css/all.min.css"></link>
+	<!-- icheck bootstrap -->
+
+	<!-- Theme style -->
+	<link rel="stylesheet"
+		href="#{request.contextPath}/dist/css/adminlte.min.css"></link>
+</h:head>
+<h:body class="hold-transition login-page">
+	<div class="login-box">
+		<div class="login-logo">
+			<a href="#"><b>Case</b>Tools</a>
+		</div>
+		<!-- /.login-logo -->
+		<div class="card">
+			<div class="card-body login-card-body">
+				<p class="login-box-msg">Sign in to start your session</p>
+
+				<h:form id="form1">
+					<p:panel id="panlogin">
+						<p:growl id="growl" showDetail="true" sticky="true">
+							<p:autoUpdate />
+						</p:growl>
+
+						<div class="input-group mb-3">
+							<p:inputText class="form-control" placeholder="Login"
+								rendered="true" requiredMessage="Empty Login"
+								value="#{loginbean.login}"></p:inputText>
+							<div class="input-group-append">
+								<div class="input-group-text">
+									<span class="fas fa-envelope"></span>
+								</div>
+							</div>
+						</div>
+						<div class="input-group mb-3">
+							<p:password class="form-control" placeholder="password"
+								rendered="true" requiredMessage="Empty Password"
+								value="#{loginbean.passwd}"></p:password>
+							<div class="input-group-append">
+								<div class="input-group-text">
+									<span class="fas fa-lock"></span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-8">
+								<div class="icheck-primary">
+									<input type="checkbox" id="remember"></input><label
+										for="remember"> Remember Me </label>
+								</div>
+							</div>
+							<!-- /.col -->
+							<div class="col-4">
+								<p:commandButton value="log in" style="width:100px"
+									action="#{loginbean.dologin()}" update="form1:growl"
+									styleClass="btn btn-block btn-primary" />
+							</div>
+							<!-- /.col -->
+						</div>
+					</p:panel>
+				</h:form>
+
+				<div class="social-auth-links text-center mb-3">
+					 
+				</div>
+				<!-- /.social-auth-links -->
+
+				<p class="mb-1">
+					<a href="#">I forgot my password</a>
+				</p>
+				 
+			</div>
+			<!-- /.login-card-body -->
+		</div>
+	</div>
+	<!-- /.login-box -->
+
+
+</h:body>
+</html>

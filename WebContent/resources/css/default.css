@@ -1,0 +1,32 @@
+.ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea,
+	.ui-widget inputText, .ui-widget panel, .ui-widget button {
+	font-size: 10px !important;
+}
+
+.ui-button {
+	font-size: 10px !important;
+}
+
+html,body {
+	font-size: 10px;
+}
+
+.ui-inputtext {
+	font-size: 10px !important;
+	height: 25px;
+	 
+}
+
+.ui-panel {
+	font-size: 10px !important;
+}
+
+.ui-selectonemenu {
+	height: 25px; ";
+	font-size: 10px;
+}
+
+.ui-inputtext {
+	height: 25px; "
+	font-size: 10px;
+}
