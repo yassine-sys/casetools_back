@@ -22,5 +22,8 @@ public interface UserRemote {
 	public UserLogin getconnecte(String login , String passwd);
 	
 	public void removeUser(Integer id);
+	
+    public UserLogin authenticateUser(String login, String password);
+
 
 }

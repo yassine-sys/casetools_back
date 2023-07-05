@@ -1,7 +1,10 @@
 package com.alert.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "userlogin", schema = "casemanagement")
@@ -41,7 +45,75 @@ public class UserLogin implements Serializable {
 	private boolean assignedTo;
 	private boolean reAssignedTo;
 	private boolean closed;
- 
+	
+	private String authToken; // Add a field to store the authentication token
+    private Date tokenExpiration;
+    
+    
+    
+    public String getAuthToken() {
+		return authToken;
+	}
+
+	public void setAuthToken(String authToken) {
+		this.authToken = authToken;
+	}
+
+	public Date getTokenExpiration() {
+		return tokenExpiration;
+	}
+
+	public void setTokenExpiration(Date tokenExpiration) {
+		this.tokenExpiration = tokenExpiration;
+	}
+
+	public void generateAuthToken() {
+        // Generate a unique token
+        String token = generateUniqueToken();
+
+        // Set the token in the user object
+        setAuthToken(token);
+
+        // Set the token expiration date (e.g., 1 hour from now)
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, 1);
+        Date expirationDate =  calendar.getTime();
+        setTokenExpiration(expirationDate);
+    }
+
+    // Validate the token
+    public boolean validateAuthToken() {
+        // Retrieve the token from the user object
+        String token = getAuthToken();
+
+        // Check if the token exists and is valid
+        return isTokenValid(token);
+    }
+
+    // Generate a unique token
+    private String generateUniqueToken() {
+        // Generate a random token using a secure cryptographic algorithm (e.g., UUID or JWT)
+        String token = UUID.randomUUID().toString();
+
+        // Modify the token if necessary (e.g., remove dashes or encode it)
+
+        return token;
+    }
+
+    // Check if the token is valid
+    private boolean isTokenValid(String token) {
+        // Check if the token exists and is not expired
+        if (token == null || token.isEmpty() || getTokenExpiration() == null) {
+            return false;
+        }
+
+        Calendar currentCalendar = Calendar.getInstance();
+        Date currentDate =  currentCalendar.getTime();
+        return currentDate.before(getTokenExpiration());
+    }
+
+	  
+	
 	public Integer getId() {
 		return id;
 	}

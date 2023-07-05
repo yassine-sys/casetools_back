@@ -18,6 +18,11 @@ import javax.management.MBeanException;
 import javax.management.MalformedObjectNameException;
 import javax.management.ReflectionException;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.xml.bind.DatatypeConverter;
 
 import org.primefaces.PrimeFaces;
@@ -26,6 +31,9 @@ import com.alert.entities.UserLogin;
 import com.alerte.remote.UserRemote;
 import com.alert.entities.Util;
 
+@Path("/case")
+@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+@Consumes(MediaType.APPLICATION_JSON)
 @SessionScoped
 @ManagedBean(name = "loginbean")
 public class LoginMbean implements Serializable {
@@ -43,10 +51,6 @@ public class LoginMbean implements Serializable {
 		user = new UserLogin();
 		login = "";
 		passwd = "";
-	}
-
-	public void addMessage(FacesMessage.Severity severity, String summary, String detail) {
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 
 	public HttpSession getSession() {
@@ -68,8 +72,11 @@ public class LoginMbean implements Serializable {
 		this.loggedIn = loggedIn;
 	}
 
-	public void dologin() throws IOException, NoSuchAlgorithmException {
-
+	@POST
+	@Path("/login")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void dologin( ) throws IOException, NoSuchAlgorithmException {
+		
 		String myHash = "";
 		MessageDigest md;
 		md = MessageDigest.getInstance("SHA-1");
@@ -89,10 +96,7 @@ public class LoginMbean implements Serializable {
 			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 			ec.redirect(ec.getRequestContextPath() + "/welcome.jsf");
 
-		} else {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Info Message", " Incorrect Login or Lassword");
-								
-		}	
+		} 
 	}
 
 	

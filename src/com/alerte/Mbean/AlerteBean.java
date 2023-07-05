@@ -42,6 +42,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import com.alert.entities.*;
+import com.alert.services.UserService;
 import com.alerte.remote.AlerteInterface;
 import com.alerte.remote.UserRemote;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -83,6 +84,8 @@ public class AlerteBean implements Serializable {
 	private UserLogin user3 = new UserLogin();
 	@EJB
 	UserRemote userRemote;
+	
+	
 
 	@GET
 	@Path("/allrapports")
@@ -723,6 +726,27 @@ public class AlerteBean implements Serializable {
 		// Return a success response with the updated user list
 		return Response.ok(users).build();
 	}
+	
+	 @POST
+	    @Path("/auth")
+	    @Consumes(MediaType.APPLICATION_JSON)
+	    @Produces(MediaType.APPLICATION_JSON)
+	    public Response loginUser(UserLogin user) {
+	        // Authenticate the user
+	        UserLogin authenticatedUser = userRemote.authenticateUser(user.getLogin(), user.getPassword());
+
+	        if (authenticatedUser != null) {
+	            // Generate and store the authentication token
+	            authenticatedUser.generateAuthToken();
+	            userRemote.addUser(authenticatedUser);
+
+	            // Return the authenticated user with the token
+	            return Response.ok(authenticatedUser).build();
+	        } else {
+	            // Return an error response if authentication fails
+	            return Response.status(Response.Status.UNAUTHORIZED).build();
+	        }
+	    }
 
 	@PUT
 	@Path("/edituser/{id}")
@@ -855,37 +879,11 @@ public class AlerteBean implements Serializable {
 		userRemote.removeUser(id);
 		return Response.status(Response.Status.NO_CONTENT).build();
 	}
+	
+	
+	
 
-	@POST
-	@Path("/login")
-	@Consumes(MediaType.APPLICATION_JSON) // Specify the content type of the request
-	public void doLogin(UserLogin loginData) throws IOException, NoSuchAlgorithmException {
-		String login = loginData.getLogin();
-		String passwd = loginData.getPassword();
-
-		String myHash = "";
-		MessageDigest md = MessageDigest.getInstance("SHA-1");
-		md.update(passwd.getBytes());
-		byte[] digest = md.digest();
-		myHash = DatatypeConverter.printHexBinary(digest);
-
-		UserLogin user = userRemote.getconnecte(login, myHash);
-
-		if (user != null) {
-			HttpSession session = Util.getSession();
-			session.setAttribute("user.account", user);
-			session.setAttribute("login.bean", this);
-			session.setAttribute("username", user.getName());
-			session.setAttribute("userid", user.getId());
-
-			// Redirect to the welcome page
-			// ...
-
-		} else {
-			// Add an error message
-			// ...
-		}
-	}
+	
 
 	// end of user manager ********************************************
 

@@ -1,5 +1,7 @@
 package com.alert.services;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -12,6 +14,9 @@ import javax.persistence.TypedQuery;
 import com.alert.entities.ParametresRarule;
 import com.alert.entities.UserLogin;
 import com.alerte.remote.UserRemote;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @Stateless
 public class UserService implements UserRemote {
@@ -28,7 +33,8 @@ public class UserService implements UserRemote {
 	public void addUser(UserLogin userlogin) {
 		// TODO Auto-generated method stub
 		System.out.println("adding");
-		em.persist(userlogin);
+		 UserLogin mergedUser = em.merge(userlogin);
+		    em.persist(mergedUser);
 	}
 
 	@Override
@@ -42,6 +48,8 @@ public class UserService implements UserRemote {
 		// TODO Auto-generated method stub
 		em.remove(em.merge(userlogin));
 	}
+	
+
 
 	@Override
 	public UserLogin getconnecte(String login, String passwd) {
@@ -95,6 +103,34 @@ public class UserService implements UserRemote {
 		}
 		
 		
+	}
+
+	@Override
+	public UserLogin authenticateUser(String login, String password) {
+		try {
+            // Hash the password
+            MessageDigest mdsha1 = MessageDigest.getInstance("SHA-1");
+            mdsha1.update(password.getBytes());
+            byte[] digestsha1 = mdsha1.digest();
+            String myHashsha1 = javax.xml.bind.DatatypeConverter.printHexBinary(digestsha1).toUpperCase();
+
+            // Query the database for the user with the provided login and hashed password
+            TypedQuery<UserLogin> query = em.createQuery("SELECT u FROM UserLogin u WHERE u.login = :login AND u.password = :password", UserLogin.class);
+            query.setParameter("login", login);
+            query.setParameter("password", myHashsha1);
+
+            List<UserLogin> users = query.getResultList();
+            if (!users.isEmpty()) {
+                // Return the authenticated user
+                return users.get(0);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        
+        // Return null if authentication fails
+        return null;
+    
 	}
 
 }
